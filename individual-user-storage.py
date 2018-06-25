@@ -1,4 +1,3 @@
-import arcgis
 from arcgis.gis import GIS
 from getpass import getpass
 
