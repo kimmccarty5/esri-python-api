@@ -1,0 +1,30 @@
+import requests
+import urllib
+import arcpy
+import os
+
+url = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Earthquakes_Since1970/MapServer/0/query?"
+
+# TODO Replace with your where clause
+where ="1=1"
+# Replace with desired field names or leave as is for all fields.
+fields = "*"
+
+# Get the request part of the URL
+params = urllib.parse.urlencode({'where' : where, 'outFields' : fields, 'f' : 'json' })
+# Get the response from the webpage
+response = requests.get(url+params)
+# Get the JSON as text
+jsn=response.text
+
+# Set the work environment and change the destination file if desired
+arcpy.env.workspace = "C:\\temp"
+# Save the JSON to a file
+json_file = "C:\\temp\\myFeatures.json"
+file = open(json_file, "a")
+file.write(jsn)
+file.close()
+
+# Convert the JSON to a Feature Class named "myfeatures" and save it in an already existing database
+# Change the database path to one of your own and the JSON file path to the previous path
+arcpy.JSONToFeatures_conversion(json_file, os.path.join("C:\\temp\\data.gdb", "myFeatureClass"))
