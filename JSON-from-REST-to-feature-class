@@ -6,28 +6,37 @@ import os
 
 
 # TODO 
-# Replace with the URL of the service you want to query
-url = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Earthquakes_Since1970/MapServer/0/query?"
-# Replace with your where clause or leave as is to query everything
+# Replace with the URL of the query REST endpoint of a layer you want to download
+url = "https://sampleserver6.arcgisonline.com/arcgis/rest/services/NapervilleShelters/FeatureServer/0/query"
+# Replace with your where clause or leave as is to query everything.
 where ="1=1"
 # Replace with desired field names or leave as is for all fields.
 fields = "*"
+# Replace with location to save JSON or leave as is.
+json_file_folder = "C:\\temp"
+
+# Gets the name of the service from the URL
+fcName = url.split("/")[-4]
+json_file = json_file_folder+"\\{}.json".format(fcName)
 
 # Get the request part of the URL
 params = urllib.parse.urlencode({'where' : where, 'outFields' : fields, 'f' : 'json' })
 # Get the response from the webpage
-response = requests.get(url+params)
+print("Making request")
+response = requests.get(url+"?"+params)
 # Get the JSON as text
-jsn=response.text
+print("Getting response")
+jsn = response.text
 
 # Set the work environment and change the destination file if desired
 arcpy.env.workspace = "C:\\temp"
 # Save the JSON to a file
-json_file = "C:\\temp\\myFeatures.json"
+print("Writing to JSON file")
 file = open(json_file, "a")
 file.write(jsn)
 file.close()
 
 # Convert the JSON to a Feature Class named "myfeatures" and save it in an already existing database
 # Change the database path to one of your own and the JSON file path to the previous path
-arcpy.JSONToFeatures_conversion(json_file, os.path.join("C:\\temp\\data.gdb", "myFeatureClass"))
+print("Converting JSON to features")
+arcpy.JSONToFeatures_conversion(json_file, os.path.join("C:\\temp\\mygdb.gdb", fcName))
