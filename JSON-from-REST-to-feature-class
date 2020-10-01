@@ -3,9 +3,12 @@ import urllib
 import arcpy
 import os
 
-url = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Earthquakes_Since1970/MapServer/0/query?"
 
-# TODO Replace with your where clause
+
+# TODO 
+# Replace with the URL of the service you want to query
+url = "http://sampleserver6.arcgisonline.com/arcgis/rest/services/Earthquakes_Since1970/MapServer/0/query?"
+# Replace with your where clause or leave as is to query everything
 where ="1=1"
 # Replace with desired field names or leave as is for all fields.
 fields = "*"
